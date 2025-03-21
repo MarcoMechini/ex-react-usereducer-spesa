@@ -13,8 +13,7 @@ function App() {
   const [cartProducts, dispatchCartProducts] = useReducer(cartReducer, [])
 
   function cartReducer(state, action) {
-    console.log('state', state);
-    console.log('action', action);
+
 
     switch (action.type) {
       case 'ADD_ITEM':
@@ -22,21 +21,20 @@ function App() {
         if (!state.find(p => p.name === action.prodotto.name)) {
           return ([...state, { name: action.prodotto.name, price: action.prodotto.price, quantity: 1 }])
         }
-        else {
-          dispatchCartProducts({ type: 'UPDATE_QUANTITY', index: action.index, numberToAdd: 1 })
+      case 'UPDATE_QUANTITY':
+        // Logica per aggiornare la quantità
+
+        if (isNaN(action.numberToAdd) || action.numberToAdd === 0) {
+          action = { ...action, numberToAdd: 1 }
         }
-        break;
+        return (state.map(prod =>
+          (action.numberToAdd === 1) ?
+            (prod.name === action.prodotto.name) ? { ...prod, quantity: prod.quantity + action.numberToAdd } : prod
+            : (prod.name === action.prodotto.name) ? { ...prod, quantity: prod.quantity = action.numberToAdd } : prod
+        ))
       case 'REMOVE_ITEM':
         // Logica per rimuovere un prodotto
         return state.filter((p, index) => action.i !== index)
-      case 'UPDATE_QUANTITY':
-        // Logica per aggiornare la quantità
-        return (state.map((prod, i) =>
-          (action.numberToAdd === 1) ?
-            (i === action.index) ? { ...prod, quantity: prod.quantity + action.numberToAdd } : prod
-            : (i === action.index) ? { ...prod, quantity: prod.quantity = action.numberToAdd } : prod
-
-        ))
       default:
         return state;
     }
@@ -69,7 +67,7 @@ function App() {
                   name="quantity"
                   id='quantity'
                   value={p.quantity}
-                  onChange={(e) => dispatchCartProducts({ type: 'UPDATE_QUANTITY', index: i, numberToAdd: e.target.value })} />
+                  onChange={(e) => dispatchCartProducts({ type: 'UPDATE_QUANTITY', prodotto: { name: p.name }, numberToAdd: e.target.value })} />
               </div>
               <button
                 onClick={() => dispatchCartProducts({ type: 'REMOVE_ITEM', i })}>
