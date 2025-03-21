@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.product-list,
+.product-cart {
+    display: flex;
+    gap: 12px;
+}
+
+.product-list>div,
+.product-cart>div {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.product-list>div {
+    background-color: yellow;
+}
+
+.product-cart>div {
+    background-color: greenyellow;
+}
